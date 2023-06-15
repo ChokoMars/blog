@@ -67,7 +67,6 @@ export default function PostList() {
           defaultCurrent={currentPage}
           total={postsCount}
           defaultPageSize={10}
-          // defaultPageSize={5}
           showSizeChanger={false}
           onChange={(page) => {
             dispatch(pageChange(page))
