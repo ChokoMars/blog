@@ -82,10 +82,10 @@ function FormHandler({ formSet }) {
 
   return (
     <div>
-      <UserGeneralError generalError={generalError} />
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         {fieldsArr}
         {formSet.agreement && agreement}
+        <UserGeneralError generalError={generalError} />
         <UserFormBtn title={formSet.button} isValid={isValid} />
       </form>
     </div>

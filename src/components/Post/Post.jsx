@@ -49,7 +49,8 @@ export default function Post({
     }
   }, [deleting, navigate, slug, token])
 
-  const tags = tagList.map((tag) => <span key={getId()}>{tag}</span>)
+  const tagsFil = tagList.filter((tag) => tag.trim().length !== 0)
+  const tags = tagsFil.map((tag) => <span key={getId()}>{tag}</span>)
 
   const btn = (
     <div className={style['right-block-second-floor']}>

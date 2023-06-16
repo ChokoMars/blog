@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+/*eslint-disable*/
+import { useEffect, memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Spin, Pagination, Alert } from 'antd'
 
@@ -7,7 +8,7 @@ import { fetchPostsList, fetchFavorite, pageChange } from '../../features/posts/
 
 import style from './postList.module.css'
 
-export default function PostList() {
+export default memo(function PostList() {
   const dispatch = useDispatch()
 
   const status = useSelector((state) => state.postsList.status)
@@ -33,6 +34,14 @@ export default function PostList() {
     }
   }
 
+  const handleChange = useCallback(
+    (page) => {
+      dispatch(pageChange(page))
+      dispatch(fetchPostsList(token))
+    },
+    [dispatch, token]
+  )
+
   let content
   if (status === 'loading') {
     content = <Spin />
@@ -57,23 +66,26 @@ export default function PostList() {
   } else if (status === 'failed' || error) {
     content = <Alert type="error" message={error} />
   }
+  let pagination
+  if (status === 'succeeded') {
+    pagination = (
+      <Pagination
+        size="normal"
+        defaultCurrent={currentPage}
+        total={postsCount}
+        defaultPageSize={5}
+        showSizeChanger={false}
+        onChange={(page) => {
+          handleChange(page)
+        }}
+      />
+    )
+  }
 
   return (
     <section className={style.container}>
       <div className={style.content}>{content}</div>
-      <div className={style.pagination}>
-        <Pagination
-          size="normal"
-          defaultCurrent={currentPage}
-          total={postsCount}
-          defaultPageSize={10}
-          showSizeChanger={false}
-          onChange={(page) => {
-            dispatch(pageChange(page))
-            dispatch(fetchPostsList(token))
-          }}
-        />
-      </div>
+      <div className={style.pagination}>{pagination}</div>
     </section>
   )
-}
+})

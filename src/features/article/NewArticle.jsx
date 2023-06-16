@@ -20,6 +20,9 @@ function EditArticle() {
         tagValues.splice(i, 1)
       }
     }
+
+    tagValues = tagValues.trim()
+
     const dataForm = {
       resource: 'articles',
       method: 'POST',

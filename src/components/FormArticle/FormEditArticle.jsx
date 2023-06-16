@@ -8,6 +8,7 @@ export default function FormEditArticle({ pageTitle, article, onSubmit }) {
   const { title, description, body: text, tagList } = article
 
   const [tagValues, setTagValues] = useState(tagList.length === 0 ? [''] : tagList)
+  const [dis, setDis] = useState(true)
 
   const {
     register,
@@ -22,15 +23,23 @@ export default function FormEditArticle({ pageTitle, article, onSubmit }) {
     mode: 'onTouched',
   })
 
-  console.log('isSubmitting', isSubmitted)
-
   const createTagInput = (index) => (
     <input
       className={classNames(style['text-input'], style.tag)}
       type="text"
       placeholder="Tag"
       value={tagValues[index]}
-      onChange={(event) => setTagValues((tags) => tags.map((tag, idx) => (idx === index ? event.target.value : tag)))}
+      onChange={(event) => {
+        if (event.target.value.trim().length > 0) {
+          setDis(false)
+        }
+        if (event.target.value.trim().length === 0) {
+          setDis(true)
+        }
+        console.log(event.target.value.trim())
+        console.log(event.target.value.length)
+        setTagValues((tags) => tags.map((tag, idx) => (idx === index ? event.target.value : tag)))
+      }}
     />
   )
 
@@ -39,7 +48,15 @@ export default function FormEditArticle({ pageTitle, article, onSubmit }) {
 
     for (let i = 0; i < number; i++) {
       const btnAddTag = (
-        <button type="button" className={style['btn-add-tag']} onClick={() => setTagValues([...tagValues, ''])}>
+        <button
+          type="button"
+          disabled={dis}
+          className={style['btn-add-tag']}
+          onClick={() => {
+            setDis(true)
+            setTagValues([...tagValues, ''])
+          }}
+        >
           Add tag
         </button>
       )
